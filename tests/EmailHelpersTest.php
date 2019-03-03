@@ -19,18 +19,21 @@ class EmailHelpersTest extends SapphireTest
         $this->assertNull($mailer->getEncryption());
         $this->assertNull($mailer->getCharset());
         $this->assertNull($mailer->getPort());
+        $this->assertNull($mailer->smtpAutoTLS());
 
         Config::inst()->update('SmtpMailer', 'host', 'example.com');
         Config::inst()->update('SmtpMailer', 'port', 123);
         Config::inst()->update('SmtpMailer', 'password', 'dummyPass');
         Config::inst()->update('SmtpMailer', 'encryption', 'ssl');
         Config::inst()->update('SmtpMailer', 'charset', 'latin');
+        Config::inst()->update('SmtpMailer', 'smtpAutoTLS', false);
 
         $mailer = new SmtpMailer();
         $this->assertEquals('example.com', $mailer->getHost());
         $this->assertEquals('ssl', $mailer->getEncryption());
         $this->assertEquals(123, $mailer->getPort());
         $this->assertEquals('latin', $mailer->getCharset());
+        $this->assertEquals(false, $mailer->getSmtpAutoTLS());
 
         // Subclass will inherit config
         $mailer = new EmogrifiedSmtpMailer();
@@ -38,6 +41,7 @@ class EmailHelpersTest extends SapphireTest
         $this->assertEquals('ssl', $mailer->getEncryption());
         $this->assertEquals(123, $mailer->getPort());
         $this->assertEquals('latin', $mailer->getCharset());
+        $this->assertEquals(false, $mailer->getSmtpAutoTLS());
 
         // but subclass can have a separate config as well
         Config::inst()->update('EmogrifiedSmtpMailer', 'port', 444);
@@ -51,6 +55,7 @@ class EmailHelpersTest extends SapphireTest
         $this->assertEquals('tls', $mailer->getEncryption());
         $this->assertEquals(123, $mailer->getPort());
         $this->assertEquals('latin', $mailer->getCharset());
+        $this->assertEquals(false, $mailer->getSmtpAutoTLS());
 
         Config::inst()->update('SmtpMailer', 'tls', true);
         // this should throw an exception (deprecated notice)
@@ -61,6 +66,7 @@ class EmailHelpersTest extends SapphireTest
     {
         // PHPMailer setup
         $mailer = new SmtpMailer('yourserver.com:587', 'username', 'password', true, 'UTF-8');
+        $mailer->setAutoTLS(false);
         Injector::inst()->registerService($mailer, 'Mailer');
 
         $smtpmailer = Email::mailer();
