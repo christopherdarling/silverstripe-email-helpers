@@ -55,6 +55,11 @@ class SmtpMailer extends Mailer
      * @var int $smtpDebug - Debug param that gets passed to PHPMailer
      */
     protected $smtpDebug;
+    
+    /**
+     * @var bool $smtpAutoTLS - sets PHPMailer::$SMTPAutoTLS
+     */
+    protected $smtpAutoTLS;
 
 
     /**
@@ -246,6 +251,16 @@ class SmtpMailer extends Mailer
     }
 
     /**
+     * @param bool $value
+     * @return $this
+     */
+    public function setSMTPAutoTLS($value)
+    {
+        $this->smtpAutoTLS = $value;
+        return $this;
+    }
+
+    /**
      * creates a new phpmailer object
      */
     protected function initMailer()
@@ -272,6 +287,10 @@ class SmtpMailer extends Mailer
 
         if ($this->charset) {
             $mail->CharSet = $this->charset;
+        }
+        
+        if ($this->smtpAutoTLS) {
+            $mail->SMTPAutoTLS = $this->smtpAutoTLS;
         }
 
         return $mail;
