@@ -261,6 +261,14 @@ class SmtpMailer extends Mailer
     }
 
     /**
+     * @return bool
+     */
+    public function getSMTPAutoTLS($value)
+    {
+        return $this->smtpAutoTLS;
+    }
+
+    /**
      * creates a new phpmailer object
      */
     protected function initMailer()
